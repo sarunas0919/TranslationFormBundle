@@ -52,13 +52,14 @@ class TranslationsListener implements EventSubscriberInterface
         $translationClass = $this->getTranslationClass($form->getParent()->getConfig()->getDataClass());
         $fieldsOptions = $this->getFieldsOptions($form->getConfig()->getOptions(), $translationClass);
 
-        foreach ($formOptions['locales'] as $locale) {
+        foreach ($formOptions['locales'] as $i => $locale) {
             if (isset($fieldsOptions[$locale])) {
                 $form->add($locale, 'A2lix\AutoFormBundle\Form\Type\AutoFormType', [
                     'data_class' => $translationClass,
                     'required' => in_array($locale, $formOptions['required_locales'], true),
                     'fields' => $fieldsOptions[$locale],
                     'excluded_fields' => $formOptions['excluded_fields'],
+                    'data' => $event->getData()[$i]
                 ]);
             }
         }

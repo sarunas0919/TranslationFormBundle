@@ -39,7 +39,7 @@ class TranslationsListener implements EventSubscriberInterface
         $fieldsOptions = $this->translationForm->getFieldsOptions($translationClass, $formOptions);
 
         if (isset($formOptions['locales'])) {
-            foreach ($formOptions['locales'] as $locale) {
+            foreach ($formOptions['locales'] as $i => $locale) {
                 if (isset($fieldsOptions[$locale])) {
                     $form->add(
                         $locale,
@@ -47,7 +47,8 @@ class TranslationsListener implements EventSubscriberInterface
                         array(
                             'data_class' => $translationClass,
                             'fields' => $fieldsOptions[$locale],
-                            'required' => in_array($locale, $formOptions['required_locales'])
+                            'required' => in_array($locale, $formOptions['required_locales']),
+                            'data' => $event->getData()[$i],
                         )
                     );
                 }

@@ -25,6 +25,24 @@ class TranslationsListener implements EventSubscriberInterface
     }
 
     /**
+     * Format data by locale
+     *
+     * @param FormEvent $event
+     * @return array
+     */
+    private function formatData(FormEvent $event)
+    {
+        $data = $event->getData();
+        $result = [];
+
+        foreach ($data as $item) {
+            $result[$item->getLocale()] = $item;
+        }
+
+        return $result;
+    }
+
+    /**
      *
      * @param \Symfony\Component\Form\FormEvent $event
      */
@@ -41,6 +59,9 @@ class TranslationsListener implements EventSubscriberInterface
         if (isset($formOptions['locales'])) {
             foreach ($formOptions['locales'] as $i => $locale) {
                 if (isset($fieldsOptions[$locale])) {
+
+                    $data = $this->formatData($event);
+
                     $form->add(
                         $locale,
                         LegacyFormHelper::getType('A2lix\TranslationFormBundle\Form\Type\TranslationsFieldsType'),
@@ -48,7 +69,7 @@ class TranslationsListener implements EventSubscriberInterface
                             'data_class' => $translationClass,
                             'fields' => $fieldsOptions[$locale],
                             'required' => in_array($locale, $formOptions['required_locales']),
-                            'data' => $event->getData()[$i],
+                            'data' => isset($data[$locale]) ? $data[$locale] : null,
                         )
                     );
                 }

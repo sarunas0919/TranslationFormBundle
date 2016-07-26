@@ -35,8 +35,10 @@ class TranslationsListener implements EventSubscriberInterface
         $data = $event->getData();
         $result = [];
 
-        foreach ($data as $item) {
-            $result[$item->getLocale()] = $item;
+        if ($data) {
+            foreach ($data as $item) {
+                $result[$item->getLocale()] = $item;
+            }
         }
 
         return $result;
